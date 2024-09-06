@@ -48,7 +48,7 @@ const Player = ({ currentTime, media, onTimeUpdate, totalDuration }) => {
   }, []);
 
   useEffect(() => {
-    const active = media.filter(item => currentTime >= item.start && currentTime < item.start + item.duration);
+    const active = media.filter(item => item && item.file && currentTime >= item.start && currentTime < item.start + item.duration);
     setActiveMedia(active);
 
     // Initialize positions for new media items
@@ -147,22 +147,27 @@ const Player = ({ currentTime, media, onTimeUpdate, totalDuration }) => {
           </Rnd>
         ))}
       </div>
-      <div className="mt-4 flex justify-center space-x-4">
-        <button onClick={handleSkipBack} className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors duration-200">
-          <SkipBack className="w-6 h-6" />
-        </button>
-        {isPlaying ? (
-          <button onClick={handlePause} className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors duration-200">
-            <Pause className="w-6 h-6" />
+      <div className="mt-4 flex justify-between items-center">
+        <div className="flex space-x-4">
+          <button onClick={handleSkipBack} className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors duration-200">
+            <SkipBack className="w-6 h-6" />
           </button>
-        ) : (
-          <button onClick={handlePlay} className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors duration-200">
-            <Play className="w-6 h-6" />
+          {isPlaying ? (
+            <button onClick={handlePause} className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors duration-200">
+              <Pause className="w-6 h-6" />
+            </button>
+          ) : (
+            <button onClick={handlePlay} className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors duration-200">
+              <Play className="w-6 h-6" />
+            </button>
+          )}
+          <button onClick={handleSkipForward} className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors duration-200">
+            <SkipForward className="w-6 h-6" />
           </button>
-        )}
-        <button onClick={handleSkipForward} className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors duration-200">
-          <SkipForward className="w-6 h-6" />
-        </button>
+        </div>
+        <div className="text-white">
+          {`${Math.floor(currentTime / 60)}:${(currentTime % 60).toFixed(2).padStart(5, '0')} / ${Math.floor(totalDuration / 60)}:${(totalDuration % 60).toFixed(2).padStart(5, '0')}`}
+        </div>
       </div>
     </div>
   );
